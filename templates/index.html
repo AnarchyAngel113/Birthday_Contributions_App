@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birthday Contributions</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+    <div class="container">
+        <h1 class="fade-in">🎉 Birthday Contributions 🎉</h1>
+        <p class="fade-in">Contribute to your colleague's birthday celebration!</p>
+
+        <form action="/contribute" method="post" class="contribution-form fade-in">
+            <div class="form-group">
+                <label for="name">Your Name:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="amount">Contribution Amount ($):</label>
+                <input type="number" id="amount" name="amount" min="1" required>
+            </div>
+            <button type="submit" class="btn bounce">Contribute</button>
+        </form>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

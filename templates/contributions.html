@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Contributions</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1 class="fade-in">🎉 All Contributions 🎉</h1>
+        <div class="total-display fade-in">
+            <h2>Total Collected: ${{ "%.2f"|format(total) }}</h2>
+        </div>
+
+        {% if contributions %}
+        <div class="contributions-list fade-in">
+            <h3>Individual Contributions:</h3>
+            <div class="contributions-table">
+                {% for contribution in contributions %}
+                <div class="contribution-item">
+                    <div class="contribution-info">
+                        <span class="contributor-name">{{ contribution.name }}</span>
+                        <span class="contribution-amount">${{ "%.2f"|format(contribution.amount) }}</span>
+                        <span class="contribution-time">{{ contribution.timestamp }}</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% else %}
+        <p class="fade-in">No contributions yet. Be the first to contribute!</p>
+        {% endif %}
+
+        <div class="actions fade-in">
+            <a href="/" class="btn">Make Another Contribution</a>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Payment</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+    <div class="container">
+        <h1 class="fade-in">Complete Your Payment</h1>
+        <p class="fade-in">Amount: <strong>${{ amount / 100 }}</strong></p>
+        <form id="payment-form">
+            <div id="card-element"></div>
+            <button id="submit" class="btn bounce">Pay ${{ amount / 100 }}</button>
+            <div id="card-errors" role="alert"></div>
+        </form>
+    </div>
+
+    <script>
+        // For testing UI without real payments, create a simple form
+        var form = document.getElementById('payment-form');
+        form.innerHTML = `
+            <div class="test-payment">
+                <p><strong>Test Payment Mode</strong></p>
+                <p>This is a demo - no real payment will be processed.</p>
+
+                <div class="payment-options">
+                    <h3>Choose Payment Method:</h3>
+
+                    <div class="option">
+                        <input type="radio" id="card" name="payment_method" value="card" checked>
+                        <label for="card">Debit Card</label>
+                        <div id="card-fields" class="card-form">
+                            <input type="text" id="card-number" placeholder="Card Number (any numbers)" maxlength="19">
+                            <div class="card-row">
+                                <input type="text" id="expiry" placeholder="MM/YY" maxlength="5">
+                                <input type="text" id="cvv" placeholder="CVV" maxlength="4">
+                            </div>
+                            <input type="text" id="card-name" placeholder="Name on Card">
+                        </div>
+                    </div>
+
+                    <div class="option">
+                        <input type="radio" id="cash" name="payment_method" value="cash">
+                        <label for="cash">Cash</label>
+                        <div id="cash-fields" class="cash-form" style="display: none;">
+                            <p>Cash payment will be collected separately.</p>
+                            <input type="text" id="cash-notes" placeholder="Any notes (optional)">
+                        </div>
+                    </div>
+                </div>
+
+                <button type="button" onclick="processMockPayment()" class="btn bounce">Complete Mock Payment</button>
+            </div>
+        `;
+
+        // Toggle visibility of payment method fields
+        document.querySelectorAll('input[name="payment_method"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                document.getElementById('card-fields').style.display = this.value === 'card' ? 'block' : 'none';
+                document.getElementById('cash-fields').style.display = this.value === 'cash' ? 'block' : 'none';
+            });
+        });
+
+        function processMockPayment() {
+            // Get selected payment method
+            var paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
+            var amount = '{{ amount }}';
+            var name = '{{ name }}';
+
+            if (paymentMethod === 'card') {
+                // Get card details (no validation, accepts any input)
+                var cardNumber = document.getElementById('card-number').value;
+                var expiry = document.getElementById('expiry').value;
+                var cvv = document.getElementById('cvv').value;
+                var cardName = document.getElementById('card-name').value;
+
+                console.log('Mock card payment:', { cardNumber, expiry, cvv, cardName, amount });
+            } else if (paymentMethod === 'cash') {
+                // Get cash notes
+                var cashNotes = document.getElementById('cash-notes').value;
+                console.log('Mock cash payment:', { cashNotes, amount });
+            }
+
+            // Create hidden form to submit contribution data
+            var form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/process_payment';
+
+            var amountInput = document.createElement('input');
+            amountInput.type = 'hidden';
+            amountInput.name = 'amount';
+            amountInput.value = amount;
+            form.appendChild(amountInput);
+
+            var nameInput = document.createElement('input');
+            nameInput.type = 'hidden';
+            nameInput.name = 'name';
+            nameInput.value = name;
+            form.appendChild(nameInput);
+
+            var methodInput = document.createElement('input');
+            methodInput.type = 'hidden';
+            methodInput.name = 'payment_method';
+            methodInput.value = paymentMethod;
+            form.appendChild(methodInput);
+
+            document.body.appendChild(form);
+            form.submit();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,268 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.container {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    padding: 40px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 500px;
+    width: 100%;
+    backdrop-filter: blur(10px);
+}
+
+h1 {
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 2.5em;
+}
+
+p {
+    color: #666;
+    margin-bottom: 30px;
+    font-size: 1.2em;
+}
+
+.contribution-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    width: 100%;
+    text-align: left;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+    font-weight: bold;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+input:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.btn {
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 5px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 20px;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.fade-in {
+    animation: fadeIn 1s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.bounce {
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-10px);
+    }
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+#card-element {
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+#card-errors {
+    color: #e74c3c;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+.test-payment {
+    background: #f8f9fa;
+    border: 2px dashed #6c757d;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    margin: 20px 0;
+}
+
+.test-payment p {
+    margin: 10px 0;
+    color: #495057;
+}
+
+.test-payment strong {
+    color: #dc3545;
+}
+
+.total-display {
+    background: linear-gradient(45deg, #28a745, #20c997);
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    margin: 20px 0;
+    box-shadow: 0 10px 25px rgba(40, 167, 69, 0.3);
+}
+
+.total-display h2 {
+    margin: 0;
+    font-size: 2.5em;
+    font-weight: bold;
+}
+
+.contributions-list {
+    margin-top: 30px;
+}
+
+.contributions-list h3 {
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.contributions-table {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.contribution-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    transition: background-color 0.3s;
+}
+
+.contribution-item:hover {
+    background-color: rgba(102, 126, 234, 0.1);
+}
+
+.contribution-item:last-child {
+    border-bottom: none;
+}
+
+.contribution-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.contributor-name {
+    font-weight: bold;
+    color: #333;
+    flex: 1;
+}
+
+.contribution-amount {
+    font-weight: bold;
+    color: #28a745;
+    font-size: 1.2em;
+    flex: 0 0 100px;
+    text-align: right;
+}
+
+.contribution-time {
+    color: #666;
+    font-size: 0.9em;
+    flex: 0 0 150px;
+    text-align: right;
+}
+
+.actions {
+    margin-top: 30px;
+    text-align: center;
+}
+
+/* Payment options styles */
+.payment-options {
+    margin: 20px 0;
+}
+
+.payment-options h3 {
+    color: #333;
+    margin-bottom: 15px;
+    font-size: 1.3em;
+}
+
+.option {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.option label {
+    display: block;
+    margin-bottom: 10px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.card-form, .cash-form {
+    margin-left: 20px;
+    padding: 15px;
+    background: rgba(102, 126, 234, 0.1);
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+.card-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.card-row input {
+    flex: 1;
+}
+
+.card-form input, .cash-form input {
+    margin-bottom: 10px;
+    width: calc(100% - 24px);
+}
