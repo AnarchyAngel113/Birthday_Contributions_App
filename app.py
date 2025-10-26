@@ -1,8 +1,8 @@
 """
 Birthday Contributions App
 
-A Flask web application for collecting birthday contributions from colleagues
-using Stripe payment processing. Features contribution tracking and display.
+A Flask web application for collecting birthday contributions from colleagues.
+Features contribution tracking and display.
 
 Author: AI Assistant
 """
@@ -10,7 +10,6 @@ Author: AI Assistant
 from flask import Flask, render_template, request, redirect, url_for, flash
 import os
 from dotenv import load_dotenv
-import stripe
 from datetime import datetime
 
 # Load environment variables from .env file
@@ -19,9 +18,6 @@ load_dotenv()
 # Initialize Flask app
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'dev-secret-key')
-
-# Configure Stripe API key
-stripe.api_key = os.environ.get('STRIPE_SECRET_KEY')
 
 # In-memory storage for contributions (in production, use a database)
 # TODO: Replace with persistent database storage (e.g., SQLite, PostgreSQL)
@@ -44,10 +40,9 @@ def contribute():
 
 @app.route('/process_payment', methods=['POST'])
 def process_payment():
-    """Process successful payment and store contribution"""
-    # In a real app, you'd verify the payment with Stripe webhook
+    """Process mock payment and store contribution"""
     # For demo purposes, we'll add contribution when payment is "successful"
-    amount = int(request.form.get('amount', 0)) / 100  # Convert back to dollars
+    amount = int(request.form.get('amount', 0))
     name = request.form.get('name', 'Anonymous')
 
     # Store the contribution
@@ -65,7 +60,7 @@ def payment():
     """Display the payment page with debit card and cash options"""
     amount = request.args.get('amount', 0)
     name = request.args.get('name', 'Anonymous')
-    return render_template('payment.html', amount=int(amount) * 100, name=name)  # Multiply by 100 for cents
+    return render_template('payment.html', amount=int(amount), name=name)
 
 @app.route('/success')
 def success():
