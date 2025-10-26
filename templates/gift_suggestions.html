@@ -8,12 +8,12 @@
 </head>
 <body>
     <div class="container">
-        <h1 class="fade-in">🎁 Birthday Gift Suggestions 🎁</h1>
+        <h1 class="fade-in">🎯 BOUNTY PAYOUT OPTIONS 🎯</h1>
         {% if error %}
             <p class="error">{{ error }}</p>
         {% else %}
             <div class="gift-suggestions">
-                <h2>Gift suggestions for "{{ keyword }}" in the ${{ amount }} range:</h2>
+                <h2>Elite {{ keyword }} gear for {{ amount }} credits:</h2>
                 {% if suggestions %}
                     <div class="suggestions-grid">
                         {% for suggestion in suggestions %}

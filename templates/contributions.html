@@ -8,14 +8,14 @@
 </head>
 <body>
     <div class="container">
-        <h1 class="fade-in">🎉 All Contributions 🎉</h1>
+        <h1 class="fade-in">🚀 BOUNTY HALL OF FAME 🚀</h1>
         <div class="total-display fade-in">
-            <h2>Total Collected: ${{ "%.2f"|format(total) }}</h2>
+            <h2>Total Bounty Pool: ${{ "%.2f"|format(total) }} Credits</h2>
         </div>
 
         {% if contributions %}
         <div class="contributions-list fade-in">
-            <h3>Individual Contributions:</h3>
+            <h3>Bounty Hunters:</h3>
             <div class="contributions-table">
                 {% for contribution in contributions %}
                 <div class="contribution-item">
@@ -34,8 +34,8 @@
 
         <div class="actions fade-in">
             <div class="button-group">
-                <a href="/" class="btn">Make Another Contribution</a>
-                <a href="/gift_keyword" class="btn">Get Gift Suggestions</a>
+                <a href="/" class="btn">Launch Another Bounty</a>
+                <a href="/gift_keyword" class="btn">Claim Bounty Rewards</a>
             </div>
         </div>
     </div>
