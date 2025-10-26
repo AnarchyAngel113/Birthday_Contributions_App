@@ -82,32 +82,43 @@ def view_contributions():
     total = sum(c['amount'] for c in contributions)
     return render_template('contributions.html', contributions=contributions, total=total)
 
-def get_gift_suggestions(keyword, budget):
-    """Get gift suggestions using Google AI"""
+def get_gift_images(keyword, count=5):
+    """Get gift images from Unsplash API"""
+    access_key = os.environ.get('UNSPLASH_ACCESS_KEY')
+    if not access_key:
+        return []
+
     try:
-        # Try different model names as the API might have changed
-        models_to_try = ['gemini-1.5-flash', 'gemini-1.5-pro', 'gemini-pro']
-        model = None
+        url = f"https://api.unsplash.com/search/photos?query={keyword}+gift&per_page={count}&orientation=landscape"
+        headers = {"Authorization": f"Client-ID {access_key}"}
 
-        for model_name in models_to_try:
-            try:
-                model = genai.GenerativeModel(model_name)
-                break
-            except Exception:
-                continue
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
 
-        if not model:
-            raise Exception("No suitable model found")
+        data = response.json()
+        return [photo['urls']['regular'] for photo in data.get('results', [])]
+
+    except Exception as e:
+        print(f"Error getting gift images: {e}")
+        return []
+
+def get_gift_suggestions(keyword, budget):
+    """Get gift suggestions using Google AI Gemini 1.5"""
+    try:
+        # Use Gemini 1.5 Pro for text generation
+        model = genai.GenerativeModel('gemini-1.5-pro')
 
         prompt = f"""
-        Suggest 5 birthday gift ideas for someone who likes {keyword}.
-        Budget range: ${budget - 10} to ${budget + 10}
+        Suggest 5 unique birthday gift ideas for someone who likes {keyword}.
+        Budget range: ${max(10, budget - 10)} to ${budget + 10}
         Each suggestion should include:
-        - Name of the gift
-        - Brief description (2-3 sentences)
-        - Estimated price
+        - Creative and specific name of the gift
+        - Detailed description (3-4 sentences explaining why it's great)
+        - Estimated price within budget range
+        - Why this gift matches the {keyword} interest
 
-        Format as JSON array with objects containing 'name', 'description', and 'price' fields.
+        Format as JSON array with objects containing 'name', 'description', 'price', and 'reason' fields.
+        Make suggestions creative and personalized.
         """
 
         response = model.generate_content(prompt)
@@ -121,60 +132,69 @@ def get_gift_suggestions(keyword, budget):
 
         suggestions = json.loads(suggestions_text)
 
-        # Ensure all suggestions have required fields
-        for suggestion in suggestions:
+        # Ensure all suggestions have required fields and get images
+        images = get_gift_images(keyword, len(suggestions))
+
+        for i, suggestion in enumerate(suggestions):
             if 'price' in suggestion and isinstance(suggestion['price'], str):
                 # Remove $ and convert to float
                 suggestion['price'] = float(suggestion['price'].replace('$', '').replace(',', ''))
+
+            # Add image URL if available
+            suggestion['image_url'] = images[i] if i < len(images) else None
 
         return suggestions
 
     except Exception as e:
         print(f"Error getting gift suggestions: {e}")
-        # Enhanced fallback suggestions based on keyword
+        # Enhanced fallback suggestions with images
+        images = get_gift_images(keyword, 5)
         fallback_suggestions = {
             'practical': [
-                {'name': 'Multi-tool Kit', 'description': 'A compact multi-tool with various functions for everyday use.', 'price': budget},
-                {'name': 'Insulated Water Bottle', 'description': 'Stainless steel water bottle that keeps drinks cold for 24 hours.', 'price': budget},
-                {'name': 'Portable Charger', 'description': 'Compact power bank for charging devices on the go.', 'price': budget}
+                {'name': 'Multi-tool Kit', 'description': 'A compact multi-tool with various functions for everyday use. Perfect for someone who appreciates functional and reliable tools.', 'price': budget, 'reason': 'Combines practicality with versatility for daily tasks.', 'image_url': images[0] if images else None},
+                {'name': 'Insulated Water Bottle', 'description': 'Stainless steel water bottle that keeps drinks cold for 24 hours or hot for 12 hours. Eco-friendly and durable.', 'price': budget, 'reason': 'Essential for staying hydrated on the go.', 'image_url': images[1] if len(images) > 1 else None},
+                {'name': 'Portable Charger', 'description': 'Compact power bank for charging devices on the go. Fast charging technology with multiple USB ports.', 'price': budget, 'reason': 'Never run out of battery when you need it most.', 'image_url': images[2] if len(images) > 2 else None}
             ],
             'fun': [
-                {'name': 'Board Game', 'description': 'Engaging board game perfect for family game nights.', 'price': budget},
-                {'name': 'Wireless Headphones', 'description': 'High-quality wireless headphones for music and calls.', 'price': budget},
-                {'name': 'Puzzle Set', 'description': 'Challenging puzzle set for hours of entertainment.', 'price': budget}
+                {'name': 'Strategy Board Game', 'description': 'Engaging board game perfect for family game nights. Hours of entertainment with challenging gameplay.', 'price': budget, 'reason': 'Creates memorable moments with friends and family.', 'image_url': images[0] if images else None},
+                {'name': 'Wireless Gaming Headphones', 'description': 'High-quality wireless headphones with surround sound for immersive gaming experience.', 'price': budget, 'reason': 'Enhances gaming sessions with superior audio quality.', 'image_url': images[1] if len(images) > 1 else None},
+                {'name': '3D Puzzle Set', 'description': 'Challenging 3D puzzle set for hours of creative entertainment. Develops problem-solving skills.', 'price': budget, 'reason': 'Provides intellectual stimulation and satisfaction of completion.', 'image_url': images[2] if len(images) > 2 else None}
             ],
             'luxury': [
-                {'name': 'Designer Wallet', 'description': 'Premium leather wallet with multiple card slots.', 'price': budget},
-                {'name': 'Scented Candle Set', 'description': 'Luxury scented candles with elegant fragrances.', 'price': budget},
-                {'name': 'Silk Scarf', 'description': 'Beautiful silk scarf in trendy patterns.', 'price': budget}
+                {'name': 'Designer Leather Wallet', 'description': 'Premium leather wallet with multiple card slots and RFID protection. Handcrafted with attention to detail.', 'price': budget, 'reason': 'Elevates everyday carry with sophistication and quality.', 'image_url': images[0] if images else None},
+                {'name': 'Artisan Scented Candle Collection', 'description': 'Luxury scented candles with elegant fragrances. Hand-poured with natural soy wax and essential oils.', 'price': budget, 'reason': 'Creates a relaxing ambiance and aromatic experience.', 'image_url': images[1] if len(images) > 1 else None},
+                {'name': 'Silk Sleep Mask', 'description': 'Beautiful silk sleep mask with adjustable strap. Ultra-soft and comfortable for better sleep.', 'price': budget, 'reason': 'Promotes restful sleep with luxurious comfort.', 'image_url': images[2] if len(images) > 2 else None}
             ],
             'premium': [
-                {'name': 'Smart Watch', 'description': 'Advanced smartwatch with health tracking features.', 'price': budget},
-                {'name': 'Wireless Earbuds', 'description': 'Premium wireless earbuds with noise cancellation.', 'price': budget},
-                {'name': 'Leather Briefcase', 'description': 'High-quality leather briefcase for professionals.', 'price': budget}
-            ],
-            'books': [
-                {'name': 'Bestseller Book', 'description': 'Popular fiction or non-fiction book.', 'price': budget},
-                {'name': 'Book Light', 'description': 'LED book light for reading in low light.', 'price': budget}
-            ],
-            'gadgets': [
-                {'name': 'Smart Home Device', 'description': 'Voice-controlled smart home assistant.', 'price': budget},
-                {'name': 'Bluetooth Speaker', 'description': 'Portable Bluetooth speaker with great sound.', 'price': budget}
+                {'name': 'Smart Fitness Watch', 'description': 'Advanced smartwatch with health tracking, GPS, and heart rate monitoring. Premium build quality.', 'price': budget, 'reason': 'Combines technology with health and fitness tracking.', 'image_url': images[0] if images else None},
+                {'name': 'Wireless Noise-Cancelling Earbuds', 'description': 'Premium wireless earbuds with active noise cancellation and superior sound quality.', 'price': budget, 'reason': 'Delivers exceptional audio experience in any environment.', 'image_url': images[1] if len(images) > 1 else None},
+                {'name': 'Executive Leather Briefcase', 'description': 'High-quality leather briefcase with organized compartments and professional design.', 'price': budget, 'reason': 'Perfect for the modern professional who values quality and style.', 'image_url': images[2] if len(images) > 2 else None}
             ]
         }
 
-        return fallback_suggestions.get(keyword.lower(), [
+        suggestions = fallback_suggestions.get(keyword.lower(), [
             {
-                'name': f'{keyword.title()} Gift',
-                'description': f'A thoughtful gift related to {keyword} interests.',
-                'price': budget
+                'name': f'Premium {keyword.title()} Gift',
+                'description': f'A thoughtful and high-quality gift related to {keyword} interests. Carefully selected for its excellence and appeal.',
+                'price': budget,
+                'reason': f'Matches {keyword} interests with premium quality and attention to detail.',
+                'image_url': images[0] if images else None
             },
             {
-                'name': f'Custom {keyword.title()} Item',
-                'description': f'Personalized item based on {keyword} preferences.',
-                'price': budget - 5 if budget > 5 else budget
+                'name': f'Custom {keyword.title()} Experience',
+                'description': f'Personalized experience based on {keyword} preferences. Unique and memorable way to celebrate.',
+                'price': budget - 5 if budget > 5 else budget,
+                'reason': f'Creates lasting memories centered around {keyword} passion.',
+                'image_url': images[1] if len(images) > 1 else None
             }
         ])
+
+        # Add images to suggestions if available
+        for i, suggestion in enumerate(suggestions):
+            if 'image_url' not in suggestion and i < len(images):
+                suggestion['image_url'] = images[i]
+
+        return suggestions
 
 @app.route('/gift_keyword')
 def gift_keyword():

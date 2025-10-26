@@ -15,15 +15,23 @@
             <div class="gift-suggestions">
                 <h2>Gift suggestions for "{{ keyword }}" in the ${{ amount }} range:</h2>
                 {% if suggestions %}
-                    <ul class="suggestions-list">
+                    <div class="suggestions-grid">
                         {% for suggestion in suggestions %}
-                            <li class="suggestion-item">
-                                <strong>{{ suggestion.name }}</strong>
-                                <p>{{ suggestion.description }}</p>
-                                <span class="price">${{ "%.2f"|format(suggestion.price) }}</span>
-                            </li>
+                            <div class="suggestion-card">
+                                {% if suggestion.image_url %}
+                                    <img src="{{ suggestion.image_url }}" alt="{{ suggestion.name }}" class="gift-image">
+                                {% endif %}
+                                <div class="suggestion-content">
+                                    <h3>{{ suggestion.name }}</h3>
+                                    <p class="description">{{ suggestion.description }}</p>
+                                    {% if suggestion.reason %}
+                                        <p class="reason"><strong>Why this gift:</strong> {{ suggestion.reason }}</p>
+                                    {% endif %}
+                                    <span class="price">${{ "%.2f"|format(suggestion.price) }}</span>
+                                </div>
+                            </div>
                         {% endfor %}
-                    </ul>
+                    </div>
                 {% else %}
                     <p>No suggestions available at this time.</p>
                 {% endif %}

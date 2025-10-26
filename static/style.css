@@ -331,3 +331,71 @@ input:focus {
     font-weight: bold;
     margin: 20px 0;
 }
+
+/* Gift suggestions grid styles */
+.suggestions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.suggestion-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    border: 1px solid rgba(102, 126, 234, 0.2);
+}
+
+.suggestion-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+.gift-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+}
+
+.suggestion-content {
+    padding: 20px;
+}
+
+.suggestion-content h3 {
+    color: #333;
+    margin: 0 0 10px 0;
+    font-size: 1.3em;
+    font-weight: bold;
+}
+
+.suggestion-content .description {
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 15px;
+    font-size: 0.95em;
+}
+
+.suggestion-content .reason {
+    color: #28a745;
+    font-style: italic;
+    margin-bottom: 15px;
+    font-size: 0.9em;
+    background: rgba(40, 167, 69, 0.1);
+    padding: 10px;
+    border-radius: 5px;
+    border-left: 3px solid #28a745;
+}
+
+.suggestion-content .price {
+    color: #667eea;
+    font-weight: bold;
+    font-size: 1.2em;
+    display: inline-block;
+    background: rgba(102, 126, 234, 0.1);
+    padding: 8px 12px;
+    border-radius: 20px;
+}
