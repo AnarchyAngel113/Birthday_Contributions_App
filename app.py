@@ -179,13 +179,15 @@ def get_gift_suggestions(keyword, budget):
 @app.route('/gift_keyword')
 def gift_keyword():
     """Display gift keyword selection page"""
-    amount = session.get('last_amount', 20)
-    return render_template('gift_keyword.html', amount=amount)
+    # Use total contributions instead of last individual amount
+    total = sum(c['amount'] for c in contributions)
+    return render_template('gift_keyword.html', amount=total)
 
 @app.route('/gift_suggestions', methods=['GET', 'POST'])
 def gift_suggestions():
     """Display gift suggestions page"""
-    amount = session.get('last_amount', 20)
+    # Use total contributions instead of last individual amount
+    amount = sum(c['amount'] for c in contributions)
     name = session.get('last_name', 'Friend')
 
     if request.method == 'POST':
