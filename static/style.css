@@ -266,3 +266,68 @@ input:focus {
     margin-bottom: 10px;
     width: calc(100% - 24px);
 }
+
+/* Button group styles */
+.button-group {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 30px;
+    flex-wrap: wrap;
+}
+
+.button-group .btn {
+    margin: 0;
+    flex: 1;
+    min-width: 180px;
+}
+
+/* Gift suggestions styles */
+.gift-suggestions {
+    text-align: left;
+    margin: 30px 0;
+}
+
+.suggestions-list {
+    list-style: none;
+    padding: 0;
+}
+
+.suggestion-item {
+    background: rgba(102, 126, 234, 0.1);
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 15px;
+    transition: all 0.3s;
+}
+
+.suggestion-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.suggestion-item strong {
+    color: #333;
+    font-size: 1.2em;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.suggestion-item p {
+    color: #666;
+    margin-bottom: 10px;
+    line-height: 1.5;
+}
+
+.price {
+    color: #28a745;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.error {
+    color: #e74c3c;
+    font-weight: bold;
+    margin: 20px 0;
+}

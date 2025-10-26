@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birthday Gift Suggestions</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1 class="fade-in">🎁 Birthday Gift Suggestions 🎁</h1>
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% else %}
+            <div class="gift-suggestions">
+                <h2>Suggestions for {{ keyword }} gifts in the ${{ amount }} range:</h2>
+                <ul class="suggestions-list">
+                    {% for suggestion in suggestions %}
+                        <li class="suggestion-item">
+                            <strong>{{ suggestion.name }}</strong>
+                            <p>{{ suggestion.description }}</p>
+                            <span class="price">${{ suggestion.price }}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        <div class="button-group">
+            <a href="/" class="btn bounce">Make Another Contribution</a>
+            <a href="/contributions" class="btn bounce">View All Contributions</a>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
