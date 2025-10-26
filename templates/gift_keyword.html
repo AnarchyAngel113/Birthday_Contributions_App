@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gift Keyword Selection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1 class="fade-in">🎁 Choose Gift Preferences 🎁</h1>
+        <p>What type of gifts would you like suggestions for? Select a category based on the contribution amount of ${{ amount }}.</p>
+
+        <form action="/gift_suggestions" method="POST" class="contribution-form">
+            <div class="form-group">
+                <label for="keyword">Gift Category:</label>
+                <select name="keyword" id="keyword" required>
+                    <option value="">Select a category...</option>
+                    {% if amount <= 15 %}
+                        <option value="practical">Practical Gifts</option>
+                        <option value="books">Books</option>
+                        <option value="stationery">Stationery</option>
+                    {% elif amount <= 25 %}
+                        <option value="fun">Fun & Entertainment</option>
+                        <option value="gadgets">Gadgets</option>
+                        <option value="accessories">Accessories</option>
+                    {% elif amount <= 35 %}
+                        <option value="luxury">Luxury Items</option>
+                        <option value="jewelry">Jewelry</option>
+                        <option value="perfume">Perfume/Cologne</option>
+                    {% else %}
+                        <option value="premium">Premium Gifts</option>
+                        <option value="technology">Technology</option>
+                        <option value="experience">Experience Gifts</option>
+                    {% endif %}
+                    <option value="custom">Custom Keyword</option>
+                </select>
+            </div>
+
+            <div class="form-group" id="custom-keyword-group" style="display: none;">
+                <label for="custom_keyword">Enter Custom Keyword:</label>
+                <input type="text" id="custom_keyword" name="custom_keyword" placeholder="e.g., hiking, cooking, gaming">
+            </div>
+
+            <button type="submit" class="btn bounce">Get Gift Suggestions</button>
+        </form>
+
+        <div class="button-group">
+            <a href="/" class="btn bounce">Make Another Contribution</a>
+            <a href="/contributions" class="btn bounce">View All Contributions</a>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script>
+        document.getElementById('keyword').addEventListener('change', function() {
+            const customGroup = document.getElementById('custom-keyword-group');
+            if (this.value === 'custom') {
+                customGroup.style.display = 'block';
+                document.getElementById('custom_keyword').required = true;
+            } else {
+                customGroup.style.display = 'none';
+                document.getElementById('custom_keyword').required = false;
+            }
+        });
+    </script>
+</body>
+</html>

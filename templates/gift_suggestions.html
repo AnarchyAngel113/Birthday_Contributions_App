@@ -13,16 +13,20 @@
             <p class="error">{{ error }}</p>
         {% else %}
             <div class="gift-suggestions">
-                <h2>Suggestions for {{ keyword }} gifts in the ${{ amount }} range:</h2>
-                <ul class="suggestions-list">
-                    {% for suggestion in suggestions %}
-                        <li class="suggestion-item">
-                            <strong>{{ suggestion.name }}</strong>
-                            <p>{{ suggestion.description }}</p>
-                            <span class="price">${{ suggestion.price }}</span>
-                        </li>
-                    {% endfor %}
-                </ul>
+                <h2>Gift suggestions for "{{ keyword }}" in the ${{ amount }} range:</h2>
+                {% if suggestions %}
+                    <ul class="suggestions-list">
+                        {% for suggestion in suggestions %}
+                            <li class="suggestion-item">
+                                <strong>{{ suggestion.name }}</strong>
+                                <p>{{ suggestion.description }}</p>
+                                <span class="price">${{ "%.2f"|format(suggestion.price) }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>No suggestions available at this time.</p>
+                {% endif %}
             </div>
         {% endif %}
         <div class="button-group">
